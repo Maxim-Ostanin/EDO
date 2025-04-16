@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "appeals")
 @Data
@@ -18,4 +20,6 @@ public class Appeal {
     private String title;
 
     private String description;
+
+    private LocalDateTime appealDate;
 }

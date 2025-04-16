@@ -15,6 +15,7 @@
         <module>edo-repository</module>
         <module>edo-scheduler</module>
         <module>edo-integration</module>
+        <module>edo-public-api</module>
     </modules>
 
     <properties>
