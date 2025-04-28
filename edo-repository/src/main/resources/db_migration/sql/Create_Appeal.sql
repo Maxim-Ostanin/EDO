@@ -1,7 +1,7 @@
 CREATE TABLE appeals
 (
-    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    title       VARCHAR(255),
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255),
     description VARCHAR(255),
-    create_date DATETIME
+    appeal_date TIMESTAMP
 );

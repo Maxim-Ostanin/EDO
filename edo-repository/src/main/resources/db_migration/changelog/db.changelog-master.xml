@@ -12,4 +12,9 @@
         <sqlFile path="db_migration/sql/Create_Approvals.sql" />
     </changeSet>
 
+    <!-- Добавил changeSet -->
+    <changeSet id="2" author="Elizar">
+        <sqlFile path="db_migration/sql/Create_Approvals.sql" />
+    </changeSet>
+
 </databaseChangeLog>

@@ -1,0 +1,11 @@
+logging:
+  level:
+    root: INFO
+    edo_service: DEBUG
+    edo_service.service: DEBUG
+  file:
+    name: logs/edo-service.log
+    append: true
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%level] [%logger] - %msg%n"  # ✅ Логгер теперь будет отображать твои классы!
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%level] [%logger] - %msg%n"

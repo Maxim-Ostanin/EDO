@@ -9,6 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>org.example</groupId>
     <artifactId>edo-service</artifactId>
 
     <properties>
@@ -16,17 +17,30 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+
     <dependencies>
+        <!-- модуль COMMON -->
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>edo-common</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- модуль REPOSITORY -->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>edo-repository</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
+
 </project>

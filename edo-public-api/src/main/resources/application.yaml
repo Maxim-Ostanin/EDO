@@ -1,0 +1,9 @@
+logging:
+  level:
+    root: INFO
+    edo_public_api: DEBUG
+  file:
+    path: logs/
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%level] %logger{36} - %msg%n"
+
