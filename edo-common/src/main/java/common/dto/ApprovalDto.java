@@ -9,9 +9,14 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppealDto {
+public class ApprovalDto {
     private Long id;
-    private String title;
-    private String description;
-    private LocalDateTime createDate;
+
+    private AppealDto appeal;
+
+    private String status;
+
+    private String comment;
+
+    private LocalDateTime responseDate;
 }

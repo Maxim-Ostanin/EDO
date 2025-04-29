@@ -1,25 +1,30 @@
 package edo_repository.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "appeals")
+@Table(name = "approvals")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Appeal {
+public class Approval {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "appeal_id", nullable = false)
+    private Appeal appeal;
 
-    private String description;
+    private String status;
 
-    private LocalDateTime createDate;
+    private String comment;
+
+    private LocalDateTime responseDate;
 }

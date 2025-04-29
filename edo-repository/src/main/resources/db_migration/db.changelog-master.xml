@@ -8,5 +8,8 @@
     <changeSet id="1" author="Ostanin">
         <sqlFile path="db_migration/sql/Create_Appeal.sql" />
     </changeSet>
+    <changeSet id="1" author="Ostanin">
+        <sqlFile path="db_migration/sql/Create_Approvals.sql" />
+    </changeSet>
 
 </databaseChangeLog>

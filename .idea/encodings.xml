@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/edo-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/edo-file-storage/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/edo-integration/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/edo-public-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/edo-repository/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/edo-scheduler/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/edo-service/src/main/java" charset="UTF-8" />
