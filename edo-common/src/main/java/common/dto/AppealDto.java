@@ -14,4 +14,7 @@ public class AppealDto {
     private String title;
     private String description;
     private LocalDateTime createDate;
+
+    public AppealDto(Long id, String title, String description) {
+    }
 }

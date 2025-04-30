@@ -54,6 +54,13 @@ public class ApprovalDtoValidationTest {
         ApprovalDto approvalDto = new ApprovalDto(1L, 2L, ApprovalStatus.APPROVED, longComment, LocalDateTime.now());
 
         Set<ConstraintViolation<ApprovalDto>> violations = validator.validate(approvalDto);
+
         assertFalse(violations.isEmpty(), "❌ Комментарий длиннее 500 символов должен вызывать ошибку!");
+
+        assertTrue(
+                violations.stream()
+                        .anyMatch(v -> v.getMessage().equals("Комментарий не может превышать 500 символов")),
+                "❌ Ошибка должна быть связана с длиной комментария!"
+        );
     }
 }

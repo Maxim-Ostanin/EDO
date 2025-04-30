@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class ApprovalService {
 
     private static final Logger logger = LoggerFactory.getLogger(ApprovalService.class);
+    private final ApprovalMapper approvalMapper = ApprovalMapper.INSTANCE;
     private final ApprovalRepository approvalRepository;
     private final AppealRepository appealRepository;
 
@@ -49,27 +50,28 @@ public class ApprovalService {
                     return new ApprovalValidationException("Обращение не найдено");
                 });
 
-        if (approvalDto.getResponseDate().isBefore(appeal.getAppealDate())) {
+        if (approvalDto.getResponseDate().isBefore(appeal.getCreateDate())) {
 
             logger.warn("Ошибка: responseDate={} раньше appealDate={}",
-                    approvalDto.getResponseDate(), appeal.getAppealDate());
+                    approvalDto.getResponseDate(), appeal.getCreateDate());
 
             throw new ApprovalValidationException("Дата ответа не может быть раньше даты обращения!");
         }
 
-        Approval approval = ApprovalMapper.toEntity(approvalDto, appeal);
+        Approval approval = approvalMapper.toEntity(approvalDto);
+        approval.setAppeal(appeal);
         Approval savedApproval = approvalRepository.save(approval);
 
         logger.info("Согласование успешно сохранено: {}", savedApproval);
 
-        return ApprovalMapper.toDto(savedApproval);
+        return approvalMapper.toDto(savedApproval);
     }
 
     public ApprovalDto getApprovalById(Long id) {
         logger.info("Запрос на получение согласования с id={}", id);
 
         return approvalRepository.findById(id)
-                .map(ApprovalMapper::toDto)
+                .map(approvalMapper::toDto)
                 .orElseThrow(() -> {
 
                     logger.error("Ошибка: согласование с id={}", id);
@@ -82,7 +84,7 @@ public class ApprovalService {
         logger.info("Запрос на получение всех согласований");
 
         return approvalRepository.findAll().stream()
-                .map(ApprovalMapper::toDto)
+                .map(approvalMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -105,7 +107,7 @@ public class ApprovalService {
 
         logger.info("Согласование успешно обновлено: {}", updatedApproval);
 
-        return ApprovalMapper.toDto(updatedApproval);
+        return approvalMapper.toDto(updatedApproval);
     }
 
     public void deleteApproval(Long id) {
