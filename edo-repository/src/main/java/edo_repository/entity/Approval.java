@@ -1,6 +1,6 @@
 package edo_repository.entity;
 
-
+import edo_repository.entity.enums.ApprovalStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,9 +22,14 @@ public class Approval {
     @JoinColumn(name = "appeal_id", nullable = false)
     private Appeal appeal;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 40, nullable = false)
+    private ApprovalStatus status;
 
+    @Column(length = 500, nullable = false)
     private String comment;
 
+    @Column(name = "response_date", nullable = false)
     private LocalDateTime responseDate;
 }
+
