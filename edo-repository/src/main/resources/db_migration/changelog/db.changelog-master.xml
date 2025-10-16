@@ -9,6 +9,9 @@
         <sqlFile path="db_migration/sql/Create_Appeal.sql" />
     </changeSet>
 
+    <changeSet id="3" author="Botvenko">
+        <sqlFile path="db_migration/sql/Create_Additional_Approval.sql" />
+    </changeSet>
     <!-- УДАЛИТЬ этот changeset - таблица approvals уже создана ранее -->
     <!--
     <changeSet id="2" author="Elizar">
