@@ -31,5 +31,8 @@ public class Approval {
 
     @Column(name = "response_date", nullable = false)
     private LocalDateTime responseDate;
+
+    @OneToOne(mappedBy = "approval", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private AdditionalApproval additionalApproval;
 }
 
