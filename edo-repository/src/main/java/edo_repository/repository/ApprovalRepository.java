@@ -13,4 +13,5 @@ public interface ApprovalRepository extends JpaRepository<Approval, Long> {
     Optional<Approval> findByAppealIdAndStatusAndResponseDate
             (Long appealId, String status, LocalDateTime responseDate);
 
+    LocalDateTime findAppealDateByApprovalId(Long approvalId);
 }
