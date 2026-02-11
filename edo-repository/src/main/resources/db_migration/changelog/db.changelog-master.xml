@@ -8,13 +8,16 @@
     <changeSet id="1" author="Ostanin">
         <sqlFile path="db_migration/sql/Create_Appeal.sql" />
     </changeSet>
-    <changeSet id="1" author="Ostanin">
+
+    <changeSet id="2" author="Ostanin">
+
         <sqlFile path="db_migration/sql/Create_Approvals.sql" />
+
     </changeSet>
 
     <!-- Добавил changeSet -->
-    <changeSet id="2" author="Elizar">
-        <sqlFile path="db_migration/sql/Create_Approvals.sql" />
+    <changeSet id="3" author="alexeewq18">
+        <sqlFile path="db_migration/sql/Create_Additional_Approval.sql" />
     </changeSet>
 
 </databaseChangeLog>
