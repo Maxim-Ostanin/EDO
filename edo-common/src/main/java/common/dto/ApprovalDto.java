@@ -1,6 +1,9 @@
 package common.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import edo_repository.entity.enums.ApprovalStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;

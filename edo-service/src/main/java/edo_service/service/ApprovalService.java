@@ -33,7 +33,7 @@ public class ApprovalService {
 
         if (approvalRepository.findByAppealIdAndStatusAndResponseDate(
                 approvalDto.getAppealId(),
-                approvalDto.getStatus().name(),
+                approvalDto.getStatus(),
                 approvalDto.getResponseDate()).isPresent()) {
 
             logger.warn("Ошибка: согласование уже существует для appealId={} и status={}",

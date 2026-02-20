@@ -21,5 +21,6 @@ public class Appeal {
 
     private String description;
 
+    @Column(name = "appeal_date")
     private LocalDateTime createDate;
 }

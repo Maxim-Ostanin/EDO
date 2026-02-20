@@ -1,4 +1,4 @@
-package edo_service.ServiceTest;
+package edo_service.serviceTest;
 
 import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.Approval;
@@ -26,7 +26,6 @@ public class ValidatorTest {
     @Mock
     private AdditionalApprovalRepository additionalApprovalRepository;
 
-    //Тест для 1-ой валидации: проверка статуса
     @Test
     @DisplayName("Проверка: ошибка при некорректном статусе")
     public void validateWrongStatus() {
@@ -42,7 +41,6 @@ public class ValidatorTest {
         Assertions.assertEquals("Статус может быть только: APPROVED, REJECTED, PENDING", exception.getMessage());
     }
 
-    //Тест для 2-ой валидации: проверка длины комментария
     @Test
     @DisplayName("Проверка: ошибка при слишком длинном комментарии")
     public void validateFieldsLength () {
@@ -62,7 +60,6 @@ public class ValidatorTest {
         Assertions.assertEquals("Комментарий превысил 500 символов!", exception.getMessage());
     }
 
-    //Тест для 3.1-ой валидации: Проверка наличия
     @Test
     @DisplayName("Проверка 3.1: ошибка, если основное соглашение не найдено")
     public void validateRelationsNotFound() {

@@ -1,12 +1,13 @@
-package edo_service.service;
+package edo_service.converter;
 
 import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.AdditionalApproval;
 import edo_repository.entity.Approval;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Component
-public class AdditionalApprovalToAdditionalApprovalDtoConverter {
+public class AdditionalApprovalConverterDtoAndAddApp {
 
     public AdditionalApprovalDto toDto(AdditionalApproval addApp) {
 

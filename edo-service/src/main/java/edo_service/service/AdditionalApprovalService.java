@@ -3,7 +3,8 @@ package edo_service.service;
 import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.AdditionalApproval;
 import edo_repository.repository.AdditionalApprovalRepository;
-import edo_service.ServiceTest.Validator;
+import edo_service.serviceTest.Validator;
+import edo_service.converter.AdditionalApprovalConverterDtoAndAddApp;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,14 +16,12 @@ import org.springframework.stereotype.Service;
 public class AdditionalApprovalService {
 
     private final AdditionalApprovalRepository additionalApprovalRepository;
-    private final AdditionalApprovalToAdditionalApprovalDtoConverter converter;
+    private final AdditionalApprovalConverterDtoAndAddApp converter;
     private final Validator validator;
 
-    //Сохранение доп. согласования
     @Transactional
-    public AdditionalApprovalDto saveAddApproval (AdditionalApprovalDto dto) {
+    public void saveAddApproval (AdditionalApprovalDto dto) {
 
-        // Лог перед началом операции
         log.info("Начало процесса сохранения доп. соглашения для основного ID: {}", dto.getApprovalId());
 
         try {
@@ -31,20 +30,15 @@ public class AdditionalApprovalService {
             AdditionalApproval savedEntity = additionalApprovalRepository.save(additionalApproval);
             AdditionalApprovalDto additionalApprovalDto = converter.toDto(savedEntity);
 
-            // Лог при успешном завершении
-            log.info("Доп. соглашение успешно сохранено. Тип: {}, ID: {}", dto.getType(), savedEntity.getId());
-
-            return additionalApprovalDto;
+            log.info("Доп. соглашение успешно сохранено. Тип: {}, ID: {}", dto.getType(), dto.getId());
 
         } catch (Exception e) {
-            // Лог при ошибке (неуспешное выполнение)
             log.error("Не удалось сохранить доп. соглашение для ID: {}. Причина: {}",
                     dto.getApprovalId(), e.getMessage());
             throw e;
         }
     }
 
-    //Получене доп. согласования
     public AdditionalApprovalDto findById (Long id) {
 
             log.info("Начало процесса получения доп. соглашения с id: {}", id);
@@ -64,7 +58,6 @@ public class AdditionalApprovalService {
         }
     }
 
-    //Метод для удаления
     @Transactional
     public void deleteById (Long id) {
         log.warn("Запрос на удаление доп. соглашения с id: {}", id);
@@ -82,7 +75,6 @@ public class AdditionalApprovalService {
         }
     }
 
-    //Метод для редактирования доп.согл.
     @Transactional
     public AdditionalApprovalDto editAddApproval (Long id, AdditionalApprovalDto addApprovalDto) {
 
