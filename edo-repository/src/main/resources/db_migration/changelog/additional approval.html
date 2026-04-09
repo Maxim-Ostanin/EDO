@@ -1,0 +1,30 @@
+<changeSet id="create_additional_approval_table" author="DaryaIv">
+    <createTable tableName="additional_approval">
+        <column name="id" type="BIGINT" autoIncrement="true">
+            <constraints primaryKey="true" nullable="false"></constraints>
+        </column>
+
+        <column name="approval_id" type="BIGINT">
+            <constraints nullable="false"
+                         foreignKeyName="fk_additional_approval_approvals"
+                         referencedTableName="approvals"
+                         referencedColumnNames="id"></constraints>
+        </column>
+
+        <column name="type" type="VARCHAR(10)">
+            <constraints nullable="true"></constraints>
+        </column>
+
+        <column name="status" type="VARCHAR(40)">
+            <constraints nullable="true"></constraints>
+        </column>
+
+        <column name="comment" type="VARCHAR(500)">
+            <constraints nullable="true"></constraints>
+        </column>
+
+        <column name="response_date" type="DATETIME">
+            <constraints nullable="true"></constraints>
+        </column>
+    </createTable>
+</changeSet>
