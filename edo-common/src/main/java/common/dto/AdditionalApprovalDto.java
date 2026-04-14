@@ -1,4 +1,3 @@
-
 package common.dto;
 
 import lombok.AllArgsConstructor;
@@ -18,8 +17,4 @@ public class AdditionalApprovalDto {
     private String status;
     private String comment;
     private LocalDateTime responseDate;
-
-    public AdditionalApprovalDto(Long id, long l, String manager, String pending, String ждетСогласования, Object o) {
-    }
 }
-

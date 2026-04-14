@@ -1,61 +1,85 @@
 package edo_service.service;
 
 import common.dto.AdditionalApprovalDto;
-import common.dto.AdditionalApprovalCreateDto;
-import common.dto.AdditionalApprovalUpdateDto;
+import edo_repository.entity.AdditionalApproval;
+import edo_repository.entity.Approval;
+import edo_repository.repository.AdditionalApprovalRepository;
+import edo_repository.repository.ApprovalRepository;
+import edo_service.converter.AdditionalApprovalToAdditionalApprovalDtoConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class AdditionalApprovalService {
 
-    // 1. ПОЛУЧЕНИЕ ВСЕХ (GET ALL)
-    public List<AdditionalApprovalDto> getAllAdditionalApprovals() {
-        return List.of(
-                new AdditionalApprovalDto(1L, 100L, "MANAGER", "PENDING", "Ждет согласования", null),
-                new AdditionalApprovalDto(2L, 101L, "LEGAL", "APPROVED", "Согласовано юристом", LocalDateTime.now())
-        );
+    private final AdditionalApprovalRepository additionalApprovalRepository;
+    private final ApprovalRepository approvalRepository;
+    private final AdditionalApprovalToAdditionalApprovalDtoConverter converter;
+
+    /**
+     * Получение DTO по ID
+     */
+    @Transactional(readOnly = true)
+    public AdditionalApprovalDto getById(Long id) {
+        AdditionalApproval entity = additionalApprovalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("AdditionalApproval not found with id: " + id));
+
+        return converter.toDto(entity);
     }
 
-    // 2. ПОЛУЧЕНИЕ ПО ID (GET BY ID)
-    public AdditionalApprovalDto getAdditionalApprovalById(Long id) {
-        return new AdditionalApprovalDto(id, 100L, "MANAGER", "PENDING", "Ждет согласования", null);
+    /**
+     * Создание новой записи из DTO
+     */
+    @Transactional
+    public AdditionalApprovalDto create(AdditionalApprovalDto dto) {
+        // Конвертируем DTO -> Entity
+        AdditionalApproval entity = converter.toEntity(dto);
+
+        // Устанавливаем связь с Approval отдельно
+        if (dto.getApprovalId() != null) {
+            Approval approval = approvalRepository.findById(dto.getApprovalId())
+                    .orElseThrow(() -> new RuntimeException("Approval not found with id: " + dto.getApprovalId()));
+            entity.setApproval(approval);
+        }
+
+        // Сохраняем
+        AdditionalApproval savedEntity = additionalApprovalRepository.save(entity);
+
+        return converter.toDto(savedEntity);
     }
 
-    // 3. ПОЛУЧЕНИЕ ПО APPROVAL ID (GET BY APPROVAL ID)
-    public AdditionalApprovalDto getAdditionalApprovalByApprovalId(Long approvalId) {
-        return new AdditionalApprovalDto(1L, approvalId, "MANAGER", "PENDING", "Ждет согласования", null);
+    /**
+     * Обновление существующей записи
+     */
+    @Transactional
+    public AdditionalApprovalDto update(Long id, AdditionalApprovalDto dto) {
+        AdditionalApproval existingEntity = additionalApprovalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("AdditionalApproval not found with id: " + id));
+
+        // Обновляем поля
+        converter.updateEntity(dto, existingEntity);
+
+        // Обновляем связь с Approval если нужно
+        if (dto.getApprovalId() != null &&
+                (existingEntity.getApproval() == null || !dto.getApprovalId().equals(existingEntity.getApproval().getId()))) {
+            Approval approval = approvalRepository.findById(dto.getApprovalId())
+                    .orElseThrow(() -> new RuntimeException("Approval not found with id: " + dto.getApprovalId()));
+            existingEntity.setApproval(approval);
+        }
+
+        // Сохраняем
+        AdditionalApproval updatedEntity = (AdditionalApproval) additionalApprovalRepository.save(existingEntity);
+
+        return converter.toDto(updatedEntity);
     }
 
-    // 4. СОЗДАНИЕ (CREATE)
-    public AdditionalApprovalDto createAdditionalApproval(AdditionalApprovalCreateDto createDto) {
-        return new AdditionalApprovalDto(
-                1L,                           // id (генерируется автоматически)
-                createDto.getApprovalId(),    // approvalId из запроса
-                createDto.getType(),          // type из запроса
-                createDto.getStatus(),        // status из запроса
-                createDto.getComment(),       // comment из запроса
-                null                          // responseDate (пока null)
-        );
-    }
-
-    // 5. ОБНОВЛЕНИЕ (UPDATE)
-    public AdditionalApprovalDto updateAdditionalApproval(Long id, AdditionalApprovalUpdateDto updateDto) {
-        return new AdditionalApprovalDto(
-                id,                           // id из запроса
-                100L,                         // approvalId (существующий)
-                updateDto.getType(),          // type из запроса
-                updateDto.getStatus(),        // status из запроса
-                updateDto.getComment(),       // comment из запроса
-                updateDto.getResponseDate()   // responseDate из запроса
-        );
-    }
-
-    // 6. УДАЛЕНИЕ (DELETE)
-    public void deleteAdditionalApproval(Long id) {
-        // Логика удаления
-        System.out.println("AdditionalApproval с id " + id + " удален");
+    /**
+     * Удаление записи
+     */
+    @Transactional
+    public void delete(Long id) {
+        additionalApprovalRepository.deleteById(id);
     }
 }
