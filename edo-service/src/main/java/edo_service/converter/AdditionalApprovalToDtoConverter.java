@@ -1,6 +1,5 @@
 package edo_service.converter;
 
-package edo_service.converter;
 
 import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.AdditionalApproval;

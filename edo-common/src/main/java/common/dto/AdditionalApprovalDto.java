@@ -1,5 +1,6 @@
 package common.dto;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,8 @@ public class AdditionalApprovalDto {
     private String status;
     private String comment;
     private LocalDateTime responseDate;
+
+    @Pattern(regexp = "^(APPROVED|REJECTED|PENDING)$",
+            message = "status может быть только: APPROVED, REJECTED, PENDING")
+    private String getStatus;
 }
