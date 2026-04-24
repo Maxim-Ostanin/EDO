@@ -2,16 +2,15 @@ package edo_public_api.controller;
 
 
 import common.dto.AdditionalApprovalDto;
-import common.dto.AdditionalApprovalCreateDto;
-import common.dto.AdditionalApprovalUpdateDto;
-import edo_service.exception.AdditionalApprovalValidationException;
-import edo_service.service.AdditionalApprovalService;
+import edo_service.exception.ApprovalValidationException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import edo_service.service.AdditionalApprovalService;
 
 import java.util.List;
 
@@ -53,14 +52,14 @@ public class AdditionalApprovalController {
     // 4. СОЗДАНИЕ (CREATE)
     @PostMapping
     public ResponseEntity<AdditionalApprovalDto> createAdditionalApproval(
-            @Valid @RequestBody AdditionalApprovalCreateDto createDto) {
+            @Valid @RequestBody AdditionalApprovalDto createDto) {
         logger.info("Запрос на создание дополнительного согласования: {}", createDto);
 
         try {
-            AdditionalApprovalDto savedAdditionalApproval = additionalApprovalService.createAdditionalApproval(createDto);
+            AdditionalApprovalDto savedAdditionalApproval = additionalApprovalService.AdditionalApproval(createDto);
             logger.info("Дополнительное согласование успешно создано: {}", savedAdditionalApproval);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedAdditionalApproval);
-        } catch (AdditionalApprovalValidationException e) {
+        } catch (ApprovalValidationException e) {
             logger.error("Ошибка валидации дополнительного согласования: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (Exception e) {
@@ -73,14 +72,14 @@ public class AdditionalApprovalController {
     @PutMapping("/{id}")
     public ResponseEntity<AdditionalApprovalDto> updateAdditionalApproval(
             @PathVariable Long id,
-            @Valid @RequestBody AdditionalApprovalUpdateDto updateDto) {
+            @Valid @RequestBody AdditionalApprovalDto updateDto) {
         logger.info("Запрос на обновление дополнительного согласования с id: {}", id);
 
         try {
             AdditionalApprovalDto updatedAdditionalApproval = additionalApprovalService.updateAdditionalApproval(id, updateDto);
             logger.info("Дополнительное согласование успешно обновлено: {}", updatedAdditionalApproval);
             return ResponseEntity.ok(updatedAdditionalApproval);
-        } catch (AdditionalApprovalValidationException e) {
+        } catch (ApprovalValidationException e) {
             logger.error("Ошибка валидации при обновлении дополнительного согласования с id: {}: {}", id, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (Exception e) {

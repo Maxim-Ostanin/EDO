@@ -34,4 +34,7 @@ public class AdditionalApproval {
 
     @Column(name = "response_date")
     private LocalDateTime responseDate;
+
+    public void setApproval(Approval approval) {
+    }
 }

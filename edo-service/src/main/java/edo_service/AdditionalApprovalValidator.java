@@ -2,8 +2,7 @@ package edo_service;
 
 import java.util.List;
 
-public class AdditionalApprovalValidator {
-
+import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.Approval;
 import edo_repository.repository.AdditionalApprovalRepository;
 import edo_repository.repository.ApprovalRepository;
@@ -11,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 
     @Component
     @RequiredArgsConstructor
@@ -19,6 +18,11 @@ import java.util.List;
 
         private final AdditionalApprovalRepository additionalApprovalRepository;
         private final ApprovalRepository approvalRepository;
+
+        public AdditionalApprovalValidator(AdditionalApprovalRepository additionalApprovalRepository, ApprovalRepository approvalRepository) {
+            this.additionalApprovalRepository = additionalApprovalRepository;
+            this.approvalRepository = approvalRepository;
+        }
 
         // 1. Валидация на дубликат (идемпотентность)
         public void validateNoDuplicate(Long approvalId, String type, String status) {
@@ -95,4 +99,4 @@ import java.util.List;
             validateResponseDate(dto.getResponseDate(), dto.getApprovalId());
         }
     }
-}
+

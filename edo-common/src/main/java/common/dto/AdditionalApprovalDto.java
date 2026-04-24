@@ -21,5 +21,40 @@ public class AdditionalApprovalDto {
 
     @Pattern(regexp = "^(APPROVED|REJECTED|PENDING)$",
             message = "status может быть только: APPROVED, REJECTED, PENDING")
-    private String getStatus;
+    public String getStatus;
+
+    public Long getApprovalId() {
+        return 0L;
+    }
+
+    public String getComment() {
+        return "";
+    }
+
+    public LocalDateTime getResponseDate() {
+        return null;
+    }
+
+    public String getType() {
+        return "";
+    }
+
+    public String getStatus() {
+        return "";
+    }
+
+    public void setApprovalId(long l) {
+    }
+
+    public void setComment(String testComment) {
+    }
+
+    public void setStatus(String pending) {
+    }
+
+    public void setResponseDate(LocalDateTime now) {
+    }
+
+    public void setType(String postApproval) {
+    }
 }
