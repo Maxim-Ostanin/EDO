@@ -25,6 +25,10 @@ public class AdditionalApprovalController {
         this.additionalApprovalService = additionalApprovalService;
     }
 
+    //FIXME: В т.з. было обозначенно 4 метода, из них на получение 1. У тебя на получение 3.
+    // В целом они логичные но их не было в т.з. а значит фронт не будет отправлять в них запросы и они будут не задействованы.
+    // Стараемся делать все по т.з. если кажется что нужно что то еще лучше уточнить у того кто дал т.з.
+
     // 1. ПОЛУЧЕНИЕ ВСЕХ (GET ALL)
     @GetMapping
     public ResponseEntity<List<AdditionalApprovalDto>> getAllAdditionalApprovals() {

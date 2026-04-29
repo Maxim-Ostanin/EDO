@@ -19,10 +19,15 @@ public class AdditionalApprovalDto {
     private String comment;
     private LocalDateTime responseDate;
 
+    //FIXME: Зачем нужно поле getStatus? уже есть status
+
     @Pattern(regexp = "^(APPROVED|REJECTED|PENDING)$",
             message = "status может быть только: APPROVED, REJECTED, PENDING")
     public String getStatus;
 
+    //FIXME: Все эти методы тоже не нужны потому что ты используешь @Data которая сгенерирует все геттеры и сеттеры сама.
+    //FIXME: А так ты получается переопределила то что система сделала бы правильно, но переопределила пустыми отдающими пустоту,
+    //FIXME: В итоге после конвертации ты потеряешь все данные, все поля окажутся пустыми и null. Это серьезная проблема
     public Long getApprovalId() {
         return 0L;
     }

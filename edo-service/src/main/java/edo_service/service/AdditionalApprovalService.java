@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+//FIXME: у меня на аннотации @RequiredArgsConstructor компилятор ругается, вроде из за того что у тебя уже реализован конструктор с аргументами ниже
 @Service
-@RequiredArgsConstructor  // ← Lombok создаст конструктор со всеми final полями
+@RequiredArgsConstructor  // ← Lombok создаст конструктор со всеми final полями //FIXME:Такие комментарии не нужно пушить, это ИИ обьясняет тебе что он сделал.
+//FIXME: Да и в принципе комментарии нигде не нужны, если только прям очень сложное место в котором нужно что то пояснить для будущих покалений разработчиков но такое прям редко быват
 public class AdditionalApprovalService {
 
     // Все зависимости перечисляем как final поля
@@ -58,6 +59,10 @@ public class AdditionalApprovalService {
                 .orElseThrow(() -> new RuntimeException("Not found"));
         return converter.toDto(entity);
     }
+
+    //FIXME: Ты в контроллере вызываешь все эти методы которые идут ниже. Но они пустые, вообще не обращаются к репозиторию и ничего не меняют в БД
+    //FIXME:А методы которые идут выше написаны корректно, вызывают репозиторий, производят валидации и конвертации в общем все что нужно, почему ты не вызываешь их?
+    //FIXME: Вызывай методы выше, методы ниже все удаляй. Если нужно просто переименуй методы выше
 
     public void deleteAdditionalApproval(Long id) {
     }

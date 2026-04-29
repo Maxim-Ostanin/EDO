@@ -3,10 +3,13 @@ package edo_service.converter;
 
 import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.AdditionalApproval;
+//FIXME: Старайся не оставлять ничего что не ичпользуется, ни импорты ни методы...
 import edo_repository.entity.Approval;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+//FIXME: Этот класс ты назвала AdditionalApprovalToAdditionalApprovalDtoConverter как и указано в т.з.
+// А вот если посмотришь название этого файла в проекте (слева) то увидишь что он назван AdditionalApprovalToDtoConverter.java из за этого возникает ошибка
 @Component
 @RequiredArgsConstructor
 public class AdditionalApprovalToAdditionalApprovalDtoConverter {
@@ -60,6 +63,7 @@ public class AdditionalApprovalToAdditionalApprovalDtoConverter {
         return entity;
     }
 
+    //FIXME: Этот метод не используется и не нужен, его удаляй
     /**
      * Обновляет существующую Entity из DTO (для частичного обновления)
      */
