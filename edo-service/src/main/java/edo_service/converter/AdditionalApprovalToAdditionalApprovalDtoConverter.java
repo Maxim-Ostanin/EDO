@@ -1,17 +1,10 @@
 package edo_service.converter;
 
-
 import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.AdditionalApproval;
-//FIXME: Старайся не оставлять ничего что не ичпользуется, ни импорты ни методы...
-import edo_repository.entity.Approval;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-//FIXME: Этот класс ты назвала AdditionalApprovalToAdditionalApprovalDtoConverter как и указано в т.з.
-// А вот если посмотришь название этого файла в проекте (слева) то увидишь что он назван AdditionalApprovalToDtoConverter.java из за этого возникает ошибка
 @Component
-@RequiredArgsConstructor
 public class AdditionalApprovalToAdditionalApprovalDtoConverter {
 
     /**
@@ -23,11 +16,13 @@ public class AdditionalApprovalToAdditionalApprovalDtoConverter {
         }
 
         AdditionalApprovalDto dto = new AdditionalApprovalDto();
+
+
         dto.setId(entity.getId());
 
-        // Извлекаем ID из связанной сущности Approval
+
         if (entity.getApproval() != null) {
-            dto.setApprovalId(entity.getApproval().getId());
+            dto.setApprovalId(entity.getApproval().getId());  // ← setApprovalId, а не getApproval
         } else {
             dto.setApprovalId(null);
         }
@@ -50,6 +45,8 @@ public class AdditionalApprovalToAdditionalApprovalDtoConverter {
         }
 
         AdditionalApproval entity = new AdditionalApproval();
+
+
         entity.setId(dto.getId());
 
         // Связь с Approval НЕ устанавливаем здесь, чтобы избежать циклической зависимости
@@ -62,35 +59,5 @@ public class AdditionalApprovalToAdditionalApprovalDtoConverter {
 
         return entity;
     }
-
-    //FIXME: Этот метод не используется и не нужен, его удаляй
-    /**
-     * Обновляет существующую Entity из DTO (для частичного обновления)
-     */
-    public void updateEntity(AdditionalApprovalDto dto, AdditionalApproval entity) {
-        if (dto == null || entity == null) {
-            return;
-        }
-
-        if (dto.getApprovalId() != null) {
-            // Только сохраняем ID, саму связь устанавливайте в сервисе
-            // entity.setApproval(approval);
-        }
-
-        if (dto.getType() != null) {
-            entity.setType(dto.getType());
-        }
-
-        if (dto.getStatus() != null) {
-            entity.setStatus(dto.getStatus());
-        }
-
-        if (dto.getComment() != null) {
-            entity.setComment(dto.getComment());
-        }
-
-        if (dto.getResponseDate() != null) {
-            entity.setResponseDate(dto.getResponseDate());
-        }
-    }
 }
+

@@ -17,7 +17,7 @@ public class AdditionalApproval {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    public Long id;
 
     @OneToOne
     @JoinColumn(name = "approval_id", nullable = false, unique = true)

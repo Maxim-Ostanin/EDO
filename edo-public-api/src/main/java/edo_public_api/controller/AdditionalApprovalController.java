@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import edo_service.service.AdditionalApprovalService;
 
+import java.util.Collections;
 import java.util.List;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping("/additional-approvals")
@@ -31,36 +34,22 @@ public class AdditionalApprovalController {
 
     // 1. ПОЛУЧЕНИЕ ВСЕХ (GET ALL)
     @GetMapping
-    public ResponseEntity<List<AdditionalApprovalDto>> getAllAdditionalApprovals() {
+    public ResponseEntity<List<AdditionalApprovalDto>> AdditionalApprovalDto() {
         logger.info("Получение списка дополнительных согласований");
-        List<AdditionalApprovalDto> approvals = additionalApprovalService.getAllAdditionalApprovals();
+
+        List<AdditionalApprovalDto> approvals = Collections.singletonList(additionalApprovalService.getAll());
         return ResponseEntity.ok(approvals);
     }
 
-    // 2. ПОЛУЧЕНИЕ ПО ID (GET BY ID)
-    @GetMapping("/{id}")
-    public ResponseEntity<AdditionalApprovalDto> getAdditionalApprovalById(@PathVariable Long id) {
-        logger.info("Запрос на получение дополнительного согласования с id: {}", id);
-        AdditionalApprovalDto additionalApprovalDto = additionalApprovalService.getAdditionalApprovalById(id);
-        return ResponseEntity.ok(additionalApprovalDto);
-    }
-
-    // 3. ПОЛУЧЕНИЕ ПО APPROVAL ID (GET BY APPROVAL ID)
-    @GetMapping("/by-approval/{approvalId}")
-    public ResponseEntity<AdditionalApprovalDto> getAdditionalApprovalByApprovalId(@PathVariable Long approvalId) {
-        logger.info("Запрос на получение дополнительного согласования по approvalId: {}", approvalId);
-        AdditionalApprovalDto additionalApprovalDto = additionalApprovalService.getAdditionalApprovalByApprovalId(approvalId);
-        return ResponseEntity.ok(additionalApprovalDto);
-    }
 
     // 4. СОЗДАНИЕ (CREATE)
     @PostMapping
-    public ResponseEntity<AdditionalApprovalDto> createAdditionalApproval(
+    public ResponseEntity<AdditionalApprovalDto> create(
             @Valid @RequestBody AdditionalApprovalDto createDto) {
         logger.info("Запрос на создание дополнительного согласования: {}", createDto);
 
         try {
-            AdditionalApprovalDto savedAdditionalApproval = additionalApprovalService.AdditionalApproval(createDto);
+            AdditionalApprovalDto savedAdditionalApproval = additionalApprovalService.create(createDto);
             logger.info("Дополнительное согласование успешно создано: {}", savedAdditionalApproval);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedAdditionalApproval);
         } catch (ApprovalValidationException e) {
@@ -80,7 +69,7 @@ public class AdditionalApprovalController {
         logger.info("Запрос на обновление дополнительного согласования с id: {}", id);
 
         try {
-            AdditionalApprovalDto updatedAdditionalApproval = additionalApprovalService.updateAdditionalApproval(id, updateDto);
+            AdditionalApprovalDto updatedAdditionalApproval = additionalApprovalService.getAll();
             logger.info("Дополнительное согласование успешно обновлено: {}", updatedAdditionalApproval);
             return ResponseEntity.ok(updatedAdditionalApproval);
         } catch (ApprovalValidationException e) {
@@ -98,7 +87,7 @@ public class AdditionalApprovalController {
         logger.info("Запрос на удаление дополнительного согласования с id: {}", id);
 
         try {
-            additionalApprovalService.deleteAdditionalApproval(id);
+            additionalApprovalService.getAll();
             logger.info("Дополнительное согласование успешно удалено: id {}", id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {

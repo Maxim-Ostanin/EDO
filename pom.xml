@@ -19,8 +19,7 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -90,14 +89,18 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version> <!-- Версия должна быть актуальной -->
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <!-- Используйте ТОЛЬКО release. source и target нужно убрать или закомментировать -->
+                    <release>21</release>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
+                    <!-- Без fork=true иногда возникают странные ошибки, добавьте эту опцию -->
+                    <fork>true</fork>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
-
 </project>
-

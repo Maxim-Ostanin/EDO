@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 //FIXME: Но нужно сначала убрать все ошибки компиляции, что бы тесты запустились
 
     @Component
-    @RequiredArgsConstructor //FIXME: Здесь та же ошибка
     public class AdditionalApprovalValidator {
 
         private final AdditionalApprovalRepository additionalApprovalRepository;
