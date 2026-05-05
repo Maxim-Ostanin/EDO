@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
-//FIXME: у меня на аннотации @RequiredArgsConstructor компилятор ругается, вроде из за того что у тебя уже реализован конструктор с аргументами ниже
+
 @Service
 public class AdditionalApprovalService {
 
@@ -34,23 +34,61 @@ public class AdditionalApprovalService {
 
     @Transactional
     public AdditionalApprovalDto create(AdditionalApprovalDto dto) {
-        // ИСПОЛЬЗУЕМ ВАЛИДАТОР
+
         validator.validateAll(dto);
 
-        // Конвертация
+
         AdditionalApproval entity = converter.toEntity(dto);
 
-        // Установка связей
+
         if (dto.getApprovalId() != null) {
             Approval approval = approvalRepository.findById(dto.getApprovalId())
                     .orElseThrow(() -> new RuntimeException("Approval not found"));
             entity.setApproval(approval);
         }
 
-        // Сохранение
         AdditionalApproval savedEntity = additionalApprovalRepository.save(entity);
 
         return converter.toDto(savedEntity);
+    }
+    @Transactional
+    public AdditionalApprovalDto update(AdditionalApprovalDto dto) {
+
+        validator.validateAll(dto);
+
+
+        AdditionalApproval existingEntity = additionalApprovalRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Additional approval not found with id: " + dto.getId()));
+
+
+        existingEntity.setType(dto.getType());
+        existingEntity.setStatus(dto.getStatus());
+        existingEntity.setComment(dto.getComment());
+        existingEntity.setResponseDate(dto.getResponseDate());
+
+
+        if (dto.getApprovalId() != null) {
+            Approval approval = approvalRepository.findById(dto.getApprovalId())
+                    .orElseThrow(() -> new RuntimeException("Approval not found with id: " + dto.getApprovalId()));
+            existingEntity.setApproval(approval);
+        }
+
+
+        AdditionalApproval updatedEntity = additionalApprovalRepository.save(existingEntity);
+
+
+        return converter.toDto(updatedEntity);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+
+        if (!additionalApprovalRepository.existsById(id)) {
+            throw new RuntimeException("Additional approval not found with id: " + id);
+        }
+
+
+        additionalApprovalRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
@@ -59,9 +97,7 @@ public class AdditionalApprovalService {
         return converter.toDto(entity);
     }
 
-    //FIXME: Ты в контроллере вызываешь все эти методы которые идут ниже. Но они пустые, вообще не обращаются к репозиторию и ничего не меняют в БД
-    //FIXME:А методы которые идут выше написаны корректно, вызывают репозиторий, производят валидации и конвертации в общем все что нужно, почему ты не вызываешь их?
-    //FIXME: Вызывай методы выше, методы ниже все удаляй. Если нужно просто переименуй методы выше
+
 
 }
 

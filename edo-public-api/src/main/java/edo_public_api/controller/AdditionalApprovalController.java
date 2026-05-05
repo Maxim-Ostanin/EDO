@@ -28,9 +28,6 @@ public class AdditionalApprovalController {
         this.additionalApprovalService = additionalApprovalService;
     }
 
-    //FIXME: В т.з. было обозначенно 4 метода, из них на получение 1. У тебя на получение 3.
-    // В целом они логичные но их не было в т.з. а значит фронт не будет отправлять в них запросы и они будут не задействованы.
-    // Стараемся делать все по т.з. если кажется что нужно что то еще лучше уточнить у того кто дал т.з.
 
     // 1. ПОЛУЧЕНИЕ ВСЕХ (GET ALL)
     @GetMapping
@@ -69,7 +66,7 @@ public class AdditionalApprovalController {
         logger.info("Запрос на обновление дополнительного согласования с id: {}", id);
 
         try {
-            AdditionalApprovalDto updatedAdditionalApproval = additionalApprovalService.getAll();
+            AdditionalApprovalDto updatedAdditionalApproval = additionalApprovalService.update(updateDto);
             logger.info("Дополнительное согласование успешно обновлено: {}", updatedAdditionalApproval);
             return ResponseEntity.ok(updatedAdditionalApproval);
         } catch (ApprovalValidationException e) {
@@ -87,7 +84,7 @@ public class AdditionalApprovalController {
         logger.info("Запрос на удаление дополнительного согласования с id: {}", id);
 
         try {
-            additionalApprovalService.getAll();
+            additionalApprovalService.delete(id);
             logger.info("Дополнительное согласование успешно удалено: id {}", id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
