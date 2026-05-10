@@ -7,9 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdditionalApprovalToAdditionalApprovalDtoConverter {
 
-    /**
-     * Конвертирует Entity -> DTO (перед валидацией или отправкой клиенту)
-     */
+
     public AdditionalApprovalDto toDto(AdditionalApproval entity) {
         if (entity == null) {
             return null;
@@ -35,10 +33,7 @@ public class AdditionalApprovalToAdditionalApprovalDtoConverter {
         return dto;
     }
 
-    /**
-     * Конвертирует DTO -> Entity (перед обращением к репозиторию)
-     * ВНИМАНИЕ: Связь с Approval нужно будет установить отдельно в сервисе
-     */
+
     public AdditionalApproval toEntity(AdditionalApprovalDto dto) {
         if (dto == null) {
             return null;
@@ -49,8 +44,7 @@ public class AdditionalApprovalToAdditionalApprovalDtoConverter {
 
         entity.setId(dto.getId());
 
-        // Связь с Approval НЕ устанавливаем здесь, чтобы избежать циклической зависимости
-        // Установите approval в сервисе через approvalRepository.findById(dto.getApprovalId())
+
 
         entity.setType(dto.getType());
         entity.setStatus(dto.getStatus());
