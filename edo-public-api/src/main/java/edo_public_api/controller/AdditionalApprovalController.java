@@ -14,6 +14,7 @@ import edo_service.service.AdditionalApprovalService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
@@ -31,10 +32,8 @@ public class AdditionalApprovalController {
 
     // 1. ПОЛУЧЕНИЕ ВСЕХ (GET ALL)
     @GetMapping
-    public ResponseEntity<List<AdditionalApprovalDto>> AdditionalApprovalDto() {
-        logger.info("Получение списка дополнительных согласований");
-
-        List<AdditionalApprovalDto> approvals = Collections.singletonList(additionalApprovalService.getAll());
+    public ResponseEntity<List<AdditionalApprovalDto>> getAllAdditionalApprovals() {
+        List<AdditionalApprovalDto> approvals = additionalApprovalService.getAll();
         return ResponseEntity.ok(approvals);
     }
 
@@ -63,6 +62,9 @@ public class AdditionalApprovalController {
     public ResponseEntity<AdditionalApprovalDto> updateAdditionalApproval(
             @PathVariable Long id,
             @Valid @RequestBody AdditionalApprovalDto updateDto) {
+        updateDto.setId(id);
+        AdditionalApprovalDto updated = additionalApprovalService.update(updateDto);
+
         logger.info("Запрос на обновление дополнительного согласования с id: {}", id);
 
         try {

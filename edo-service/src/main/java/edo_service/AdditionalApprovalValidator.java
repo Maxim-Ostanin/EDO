@@ -10,8 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
-//FIXME: Валидация и тесты на нее выглядят корректно. Если ты запускала тесты и они проходят успешно то все хорошо.
-//FIXME: Но нужно сначала убрать все ошибки компиляции, что бы тесты запустились
+
 
     @Component
     public class AdditionalApprovalValidator {
@@ -19,7 +18,7 @@ import java.time.LocalDateTime;
         private final AdditionalApprovalRepository additionalApprovalRepository;
         private final ApprovalRepository approvalRepository;
 
-        //FIXME: Так как здесь уже есть конструктор, поидее он не нужен, так как @RequiredArgsConstructor реализует его сама
+
         public AdditionalApprovalValidator(AdditionalApprovalRepository additionalApprovalRepository, ApprovalRepository approvalRepository) {
             this.additionalApprovalRepository = additionalApprovalRepository;
             this.approvalRepository = approvalRepository;
