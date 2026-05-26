@@ -19,7 +19,7 @@ public class Approval {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "appeal_id", nullable = false)
+    @JoinColumn(name = "appealId", nullable = false)
     private Appeal appeal;
 
     @Enumerated(EnumType.STRING)

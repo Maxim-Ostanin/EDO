@@ -1,5 +1,4 @@
 package edo_service.service;
-
 import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.AdditionalApproval;
 import edo_repository.entity.Approval;
@@ -12,8 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 @Service
@@ -92,12 +92,11 @@ public class AdditionalApprovalService {
     }
 
     @Transactional(readOnly = true)
-    public AdditionalApprovalDto getAll() {
-        AdditionalApproval entity = (AdditionalApproval) additionalApprovalRepository.findAll();
-        return converter.toDto(entity);
+    public List<AdditionalApprovalDto> getAll() {
+        return additionalApprovalRepository.findAll().stream()
+                .map(converter::toDto)
+                .collect(Collectors.toList());
     }
-
-
 
 }
 

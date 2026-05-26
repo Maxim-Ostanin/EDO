@@ -1,6 +1,6 @@
 package edo_service.service;
 
-import common.dto.ApprovalDto;
+import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.Appeal;
 import edo_repository.entity.Approval;
 import edo_repository.entity.enums.ApprovalStatus;
@@ -28,24 +28,24 @@ public class ApprovalService {
         this.appealRepository = appealRepository;
     }
 
-    public ApprovalDto createApproval(ApprovalDto approvalDto) {
+    public AdditionalApprovalDto createApproval( AdditionalApprovalDto approvalDto) {
         logger.info("Запрос на создание согласования: {}", approvalDto);
 
         if (approvalRepository.findByAppealIdAndStatusAndResponseDate(
-                approvalDto.getAppealId(),
-                approvalDto.getStatus().name(),
+                approvalDto.getApprovalId(),
+                approvalDto.getStatus(),
                 approvalDto.getResponseDate()).isPresent()) {
 
             logger.warn("Ошибка: согласование уже существует для appealId={} и status={}",
-                    approvalDto.getAppealId(), approvalDto.getStatus().name());
+                    approvalDto.getApprovalId(), approvalDto.getStatus());
 
             throw new ApprovalValidationException("Такое согласование уже существует");
         }
 
-        Appeal appeal = appealRepository.findById(approvalDto.getAppealId())
+        Appeal appeal = appealRepository.findById(approvalDto.getApprovalId())
                 .orElseThrow(() -> {
 
-                    logger.error("Ошибка: обращение с id={} не найдено", approvalDto.getAppealId());
+                    logger.error("Ошибка: обращение с id={} не найдено", approvalDto.getApprovalId());
 
                     return new ApprovalValidationException("Обращение не найдено");
                 });
@@ -58,6 +58,7 @@ public class ApprovalService {
             throw new ApprovalValidationException("Дата ответа не может быть раньше даты обращения!");
         }
 
+        AdditionalApprovalDto AdditionalApproval;
         Approval approval = approvalMapper.toEntity(approvalDto);
         approval.setAppeal(appeal);
         Approval savedApproval = approvalRepository.save(approval);
@@ -67,7 +68,7 @@ public class ApprovalService {
         return approvalMapper.toDto(savedApproval);
     }
 
-    public ApprovalDto getApprovalById(Long id) {
+    public  AdditionalApprovalDto getApprovalById(Long id) {
         logger.info("Запрос на получение согласования с id={}", id);
 
         return approvalRepository.findById(id)
@@ -80,7 +81,7 @@ public class ApprovalService {
                 });
     }
 
-    public List<ApprovalDto> getAllApprovals() {
+    public List< AdditionalApprovalDto> getAllApprovals() {
         logger.info("Запрос на получение всех согласований");
 
         return approvalRepository.findAll().stream()
@@ -88,7 +89,7 @@ public class ApprovalService {
                 .collect(Collectors.toList());
     }
 
-    public ApprovalDto updateApproval(Long id, ApprovalDto approvalDto) {
+    public  AdditionalApprovalDto updateApproval(Long id,  AdditionalApprovalDto approvalDto) {
         logger.info("Запрос на обновление согласований с id={}", id);
 
         Approval existingApproval = approvalRepository.findById(id)
@@ -99,7 +100,7 @@ public class ApprovalService {
                     return new ApprovalValidationException("Согласование не найдено");
                 });
 
-        existingApproval.setStatus(ApprovalStatus.valueOf(approvalDto.getStatus().name()));
+        existingApproval.setStatus(ApprovalStatus.valueOf(approvalDto.getStatus()));
         existingApproval.setComment(approvalDto.getComment());
         existingApproval.setResponseDate(approvalDto.getResponseDate());
 

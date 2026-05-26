@@ -20,7 +20,7 @@ public class AdditionalApproval {
     public Long id;
 
     @OneToOne
-    @JoinColumn(name = "approval_id", nullable = false, unique = true)
+    @JoinColumn(name = "approvalId", nullable = false, unique = true)
     private Approval approval;
 
     @Column(name = "type", length = 10)
