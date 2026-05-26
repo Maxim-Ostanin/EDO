@@ -6,6 +6,7 @@ import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.Approval;
 import edo_repository.repository.AdditionalApprovalRepository;
 import edo_repository.repository.ApprovalRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
@@ -98,5 +99,13 @@ import java.time.LocalDateTime;
             validateCommentLength(dto.getComment());
             validateResponseDate(dto.getResponseDate(), dto.getApprovalId());
         }
+
+        public void validateForUpdate(AdditionalApprovalDto dto) {
+            validateApprovalExists(dto.getApprovalId());
+            validateStatus(dto.getStatus());
+            validateCommentLength(dto.getComment());
+            validateResponseDate(dto.getResponseDate(), dto.getApprovalId());
+        }
+
     }
 

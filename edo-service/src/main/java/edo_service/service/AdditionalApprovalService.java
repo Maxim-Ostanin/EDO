@@ -54,7 +54,7 @@ public class AdditionalApprovalService {
     @Transactional
     public AdditionalApprovalDto update(AdditionalApprovalDto dto) {
 
-        validator.validateAll(dto);
+        validator.validateForUpdate(dto);
 
 
         AdditionalApproval existingEntity = additionalApprovalRepository.findById(dto.getId())
