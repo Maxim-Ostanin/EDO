@@ -6,8 +6,6 @@ import common.dto.AdditionalApprovalDto;
 import edo_repository.entity.Approval;
 import edo_repository.repository.AdditionalApprovalRepository;
 import edo_repository.repository.ApprovalRepository;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
@@ -82,12 +80,10 @@ import java.time.LocalDateTime;
             Approval approval = approvalRepository.findById(approvalId)
                     .orElseThrow(() -> new RuntimeException("Approval не найден для проверки дат"));
 
-            LocalDateTime appealDate = approval.getAppealDate(); // убедитесь, что поле существует
+            LocalDateTime appealDate = approval.getAppealDate();
             if (appealDate != null && responseDate.isBefore(appealDate)) {
                 throw new RuntimeException(
-                        String.format("responseDate (%s) не может быть раньше appealDate (%s)",
-                                responseDate, appealDate)
-                );
+                        String.format("не может быть раньше"));
             }
         }
 

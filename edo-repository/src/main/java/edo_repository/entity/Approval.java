@@ -31,9 +31,10 @@ public class Approval {
 
     @Column(name = "response_date", nullable = false)
     private LocalDateTime responseDate;
+    private LocalDateTime appealDate;
 
     public LocalDateTime getAppealDate() {
-        return null;
+        return this.appealDate;
     }
 
     public void setId(long l) {

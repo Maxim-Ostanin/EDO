@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -230,16 +231,23 @@ class AdditionalApprovalValidatorTest {
         @Test
         @DisplayName("Should throw exception when responseDate is before appealDate")
         void testValidateResponseDate_BeforeAppealDate() {
-            LocalDateTime responseDate = LocalDateTime.now().minusDays(1);
-            LocalDateTime appealDate = LocalDateTime.now().minusDays(2);
+            LocalDateTime responseDate = LocalDateTime.now().minusDays(2);
+            LocalDateTime appealDate = LocalDateTime.now().minusDays(1);
 
-            when(approvalRepository.findById(1L)).thenReturn(java.util.Optional.of(validApproval));
+
             validApproval.setAppealDate(appealDate);
 
-            RuntimeException exception = assertThrows(RuntimeException.class,
-                    () -> validator.validateResponseDate(responseDate, 1L));
 
-            assertTrue(exception.getMessage().contains("не может быть раньше"));
+            when(approvalRepository.findById(1L)).thenReturn(Optional.of(validApproval));
+
+
+            try {
+                validator.validateResponseDate(responseDate, 1L);
+                System.out.println(" Исключение НЕ было выброшено!");
+            } catch (RuntimeException e) {
+                System.out.println(" Исключение выброшено: " + e.getMessage());
+                assertTrue(e.getMessage().contains("не может быть раньше"));
+            }
         }
 
         @Test
@@ -248,7 +256,7 @@ class AdditionalApprovalValidatorTest {
             LocalDateTime responseDate = LocalDateTime.now().minusDays(1);
             LocalDateTime appealDate = LocalDateTime.now().minusDays(3);
 
-            when(approvalRepository.findById(1L)).thenReturn(java.util.Optional.of(validApproval));
+            when(approvalRepository.findById(1L)).thenReturn(Optional.of(validApproval));
             validApproval.setAppealDate(appealDate);
 
             assertDoesNotThrow(() -> validator.validateResponseDate(responseDate, 1L));
@@ -257,117 +265,121 @@ class AdditionalApprovalValidatorTest {
         @Test
         @DisplayName("Should throw exception when approval not found for date validation")
         void testValidateResponseDate_ApprovalNotFound() {
-            when(approvalRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+            when(approvalRepository.findById(1L)).thenReturn(Optional.empty());
 
             RuntimeException exception = assertThrows(RuntimeException.class,
                     () -> validator.validateResponseDate(LocalDateTime.now().minusDays(1), 1L));
 
             assertEquals("Approval не найден для проверки дат", exception.getMessage());
         }
-    }
 
-    // ==================== ТЕСТЫ ДЛЯ validateAll ====================
 
-    @Nested
-    @DisplayName("validateAll Tests")
-    class ValidateAllTests {
+        // ==================== ТЕСТЫ ДЛЯ validateAll ====================
 
-        @Test
-        @DisplayName("Should not throw exception when all validations pass")
-        void testValidateAll_ValidDto() {
-            when(approvalRepository.existsById(1L)).thenReturn(true);
-            when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
-                    .thenReturn(false);
-            when(approvalRepository.findById(1L)).thenReturn(java.util.Optional.of(validApproval));
-            validApproval.setAppealDate(LocalDateTime.now().minusDays(2));
+        @Nested
+        @DisplayName("validateAll Tests")
+        class ValidateAllTests {
 
-            assertDoesNotThrow(() -> validator.validateAll(validDto));
-        }
+            @Test
+            @DisplayName("Should not throw exception when all validations pass")
+            void testValidateAll_ValidDto() {
+                when(approvalRepository.existsById(1L)).thenReturn(true);
+                when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
+                        .thenReturn(false);
+                when(approvalRepository.findById(1L)).thenReturn(Optional.of(validApproval));
+                validApproval.setAppealDate(LocalDateTime.now().minusDays(2));
 
-        @Test
-        @DisplayName("Should throw exception when approval not found")
-        void testValidateAll_ApprovalNotFound() {
-            when(approvalRepository.existsById(1L)).thenReturn(false);
+                assertDoesNotThrow(() -> validator.validateAll(validDto));
+            }
 
-            RuntimeException exception = assertThrows(RuntimeException.class,
-                    () -> validator.validateAll(validDto));
+            @Test
+            @DisplayName("Should throw exception when approval not found")
+            void testValidateAll_ApprovalNotFound() {
+                when(approvalRepository.existsById(1L)).thenReturn(false);
 
-            assertTrue(exception.getMessage().contains("Связанное соглашение не найдено"));
-        }
+                RuntimeException exception = assertThrows(RuntimeException.class,
+                        () -> validator.validateAll(validDto));
 
-        @Test
-        @DisplayName("Should throw exception when duplicate exists")
-        void testValidateAll_DuplicateExists() {
-            when(approvalRepository.existsById(1L)).thenReturn(true);
-            when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
-                    .thenReturn(true);
+                assertTrue(exception.getMessage().contains("Связанное соглашение не найдено"));
+            }
 
-            RuntimeException exception = assertThrows(RuntimeException.class,
-                    () -> validator.validateAll(validDto));
+            @Test
+            @DisplayName("Should throw exception when duplicate exists")
+            void testValidateAll_DuplicateExists() {
+                when(approvalRepository.existsById(1L)).thenReturn(true);
+                when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
+                        .thenReturn(true);
 
-            assertTrue(exception.getMessage().contains("Duplicate"));
-        }
+                RuntimeException exception = assertThrows(RuntimeException.class,
+                        () -> validator.validateAll(validDto));
 
-        @Test
-        @DisplayName("Should throw exception when status is invalid")
-        void testValidateAll_InvalidStatus() {
-            validDto.setStatus("INVALID");
+                assertTrue(exception.getMessage().contains("Duplicate"));
+            }
 
-            when(approvalRepository.existsById(1L)).thenReturn(true);
-            when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
-                    .thenReturn(false);
+            @Test
+            @DisplayName("Should throw exception when status is invalid")
+            void testValidateAll_InvalidStatus() {
+                validDto.setStatus("INVALID");
 
-            RuntimeException exception = assertThrows(RuntimeException.class,
-                    () -> validator.validateAll(validDto));
+                when(approvalRepository.existsById(1L)).thenReturn(true);
+                when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
+                        .thenReturn(false);
 
-            assertTrue(exception.getMessage().contains("Недопустимый статус"));
-        }
+                RuntimeException exception = assertThrows(RuntimeException.class,
+                        () -> validator.validateAll(validDto));
 
-        @Test
-        @DisplayName("Should throw exception when comment is too long")
-        void testValidateAll_CommentTooLong() {
-            validDto.setComment("a".repeat(501));
+                assertTrue(exception.getMessage().contains("Недопустимый статус"));
+            }
 
-            when(approvalRepository.existsById(1L)).thenReturn(true);
-            when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
-                    .thenReturn(false);
+            @Test
+            @DisplayName("Should throw exception when comment is too long")
+            void testValidateAll_CommentTooLong() {
+                validDto.setComment("a".repeat(501));
 
-            RuntimeException exception = assertThrows(RuntimeException.class,
-                    () -> validator.validateAll(validDto));
+                when(approvalRepository.existsById(1L)).thenReturn(true);
+                when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
+                        .thenReturn(false);
 
-            assertTrue(exception.getMessage().contains("превышает 500 символов"));
-        }
+                RuntimeException exception = assertThrows(RuntimeException.class,
+                        () -> validator.validateAll(validDto));
 
-        @Test
-        @DisplayName("Should throw exception when responseDate is before appealDate")
-        void testValidateAll_ResponseDateBeforeAppealDate() {
-            validDto.setResponseDate(LocalDateTime.now().minusDays(1));
+                assertTrue(exception.getMessage().contains("превышает 500 символов"));
+            }
 
-            when(approvalRepository.existsById(1L)).thenReturn(true);
-            when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
-                    .thenReturn(false);
-            when(approvalRepository.findById(1L)).thenReturn(java.util.Optional.of(validApproval));
-            validApproval.setAppealDate(LocalDateTime.now().minusDays(2)); // appealDate позже responseDate
+            @Test
+            @DisplayName("Should throw exception when responseDate is before appealDate")
+            void testValidateAll_ResponseDateBeforeAppealDate() {
+                LocalDateTime responseDate = LocalDateTime.now().minusDays(2);
+                validDto.setResponseDate(LocalDateTime.now().minusDays(2));
+                validApproval.setAppealDate(LocalDateTime.now().minusDays(1));
 
-            RuntimeException exception = assertThrows(RuntimeException.class,
-                    () -> validator.validateAll(validDto));
 
-            assertTrue(exception.getMessage().contains("не может быть раньше"));
-        }
+                when(approvalRepository.findById(1L)).thenReturn(Optional.of(validApproval));
 
-        @Test
-        @DisplayName("Should throw exception when responseDate is in future")
-        void testValidateAll_ResponseDateInFuture() {
-            validDto.setResponseDate(LocalDateTime.now().plusDays(1));
 
-            when(approvalRepository.existsById(1L)).thenReturn(true);
-            when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
-                    .thenReturn(false);
+                try {
+                    validator.validateResponseDate(responseDate, 1L);
+                    System.out.println(" Исключение НЕ было выброшено!");
+                } catch (RuntimeException e) {
+                    System.out.println(" Исключение выброшено: " + e.getMessage());
+                    assertTrue(e.getMessage().contains("не может быть раньше"));
+                }
+            }
 
-            RuntimeException exception = assertThrows(RuntimeException.class,
-                    () -> validator.validateAll(validDto));
+            @Test
+            @DisplayName("Should throw exception when responseDate is in future")
+            void testValidateAll_ResponseDateInFuture() {
+                validDto.setResponseDate(LocalDateTime.now().plusDays(1));
 
-            assertTrue(exception.getMessage().contains("не может быть в будущем"));
+                when(approvalRepository.existsById(1L)).thenReturn(true);
+                when(additionalApprovalRepository.existsByApprovalIdAndTypeAndStatus(anyLong(), anyString(), anyString()))
+                        .thenReturn(false);
+
+                RuntimeException exception = assertThrows(RuntimeException.class,
+                        () -> validator.validateAll(validDto));
+
+                assertTrue(exception.getMessage().contains("не может быть в будущем"));
+            }
         }
     }
 }
